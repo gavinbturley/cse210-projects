@@ -4,6 +4,15 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello World! This is the Fractions Project.");
+        Fraction fraction = new Fraction();
+
+        fraction.setTop(3);
+        fraction.setBottom(4);
+
+        int ft = fraction.getTop();
+        int fb = fraction.getBottom();
+
+        fraction.getFractionString();
+        fraction.getDecimalValue();
     }
 }
