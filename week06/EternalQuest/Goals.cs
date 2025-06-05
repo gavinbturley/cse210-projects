@@ -17,10 +17,7 @@ public abstract class Goal
     {
         return _description;
     }
-    public string GetPoints()
-    {
-        return _points;
-    }
+    public abstract string GetPoints();
     public abstract void RecordEvent();
     public abstract bool IsComplete();
     public virtual string GetDetailsString()
@@ -44,6 +41,10 @@ public class SimpleGoal : Goal
     public SimpleGoal(string shortName, string description, string points) : base(shortName, description, points)
     {
         _isComplete = false;
+    }
+    public override string GetPoints()
+    {
+        return _points;
     }
     public override void RecordEvent()
     {
@@ -77,11 +78,21 @@ public class SimpleGoal : Goal
 
 public class EternalGoal : Goal
 {
-    public EternalGoal(string shortName, string description, string points) : base(shortName, description, points){}
+    private int _count;
+    public EternalGoal(string shortName, string description, string points) : base(shortName, description, points)
+    {
+        _count = 0;
+    }
+    public override string GetPoints()
+    {
+        return _points;
+    }
 
     public override void RecordEvent()
     {
         Console.WriteLine($"{GetShortName()} completed for {GetPoints()} points!");
+        _count++;
+        Console.WriteLine($"You have completed this goal {_count} times.");
     }
     public override bool IsComplete()
     {
@@ -103,6 +114,10 @@ public class ChecklistGoal : Goal
         _amountCompleted = 0;
         _target = target;
         _bonus = bonus;
+    }
+    public override string GetPoints()
+    {
+        return _points;
     }
     public override void RecordEvent()
     {
@@ -138,5 +153,28 @@ public class ChecklistGoal : Goal
     public override string GetStringRepresentation()
     {
         return $"[{_amountCompleted}/{_target}], {GetShortName()}, {GetDescription()}, ({GetPoints()} points, {_bonus} bonus points)";
+    }
+}
+public class NegativeGoal : Goal
+{
+    private int _count;
+    public NegativeGoal(string shortName, string description, string points) : base(shortName, description, points) { }
+    public override string GetPoints()
+    {
+        return _points;
+    }
+    public override void RecordEvent()
+    {
+        Console.WriteLine($"{GetShortName()} completed, you lost {GetPoints()} points.");
+        _count++;
+        Console.WriteLine($"You have completed this goal {_count} times.");
+    }
+    public override bool IsComplete()
+    {
+        return false;
+    }
+    public override string GetStringRepresentation()
+    {
+        return $"{GetShortName()}, {GetDescription()}, ({GetPoints()} points)";
     }
 }
